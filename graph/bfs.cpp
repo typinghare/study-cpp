@@ -45,7 +45,7 @@ DirectedPath getPathWithBFS(const DirectedGraph& graph, const Vertex& a, const V
         for (const auto& arc : graph.getArcsStartFrom(*current)) {
             // Get the head (destination) vertex of the arc
             // If the head vertex has not been visited yet
-            if (const auto* const next = arc.head; !visited.contains(next)) {
+            if (const auto* const next = arc.head_; !visited.contains(next)) {
                 // Push the head vertex to the queue for further processing
                 vertex_queue.push(next);
                 // Mark the head vertex as visited
@@ -81,7 +81,7 @@ DirectedPath getPathWithBFS(const DirectedGraph& graph, const Vertex& a, const V
             const Vertex* head = reversed_path.top();
             reversed_path.pop();
             // Add the arc to the directed path
-            directed_path.arcVector.emplace_back(tail, head);
+            directed_path.arc_vector_.emplace_back(tail, head);
             // Move to the next arc in the path
             tail = head;
         }
@@ -94,6 +94,10 @@ DirectedPath getPathWithBFS(const DirectedGraph& graph, const Vertex& a, const V
     return {};
 }
 
+/**
+ * @brief A simple example.
+ * @output Path from A to G: A -> B -> F -> G
+ */
 int main() {
     // Create vertices
     const Vertex v1("A");
@@ -130,12 +134,12 @@ int main() {
     const auto& from = v1;
     const auto& to = v7;
     if (const auto [arcVector] = getPathWithBFS(graph, from, to); arcVector.empty()) {
-        std::cout << "No path found from " << from.label << " to " << to.label << std::endl;
+        std::cout << "No path found from " << from.label_ << " to " << to.label_ << std::endl;
     } else {
-        std::cout << "Path from " << from.label << " to " << to.label << ": ";
-        std::cout << arcVector[0].tail->label;
+        std::cout << "Path from " << from.label_ << " to " << to.label_ << ": ";
+        std::cout << arcVector[0].tail_->label_;
         for (const auto& arc : arcVector) {
-            std::cout << " -> " << arc.head->label;
+            std::cout << " -> " << arc.head_->label_;
         }
         std::cout << std::endl;
     }

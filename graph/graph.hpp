@@ -5,43 +5,43 @@
 #include <string>
 
 struct Vertex {
-    std::string label;
+    std::string label_;
 
-    explicit Vertex(std::string label) : label(std::move(label)) {}
-    bool operator==(const Vertex& vertex) const { return label == vertex.label; }
-    bool operator<(const Vertex& vertex) const { return label < vertex.label; }
+    explicit Vertex(std::string label) : label_(std::move(label)) {}
+    bool operator==(const Vertex& vertex) const { return label_ == vertex.label_; }
+    bool operator<(const Vertex& vertex) const { return label_ < vertex.label_; }
 };
 
 struct Arc {
-    const Vertex* tail;
-    const Vertex* head;
+    const Vertex* tail_;
+    const Vertex* head_;
 
-    Arc(const Vertex* tail, const Vertex* head) : tail(tail), head(head) {}
+    Arc(const Vertex* tail, const Vertex* head) : tail_(tail), head_(head) {}
     bool operator<(const Arc& arc) const {
-        return *tail == *arc.tail ? *head < *arc.head : *tail < *arc.tail;
+        return *tail_ == *arc.tail_ ? *head_ < *arc.head_ : *tail_ < *arc.tail_;
     }
 };
 
 struct DirectedGraph {
-    std::set<Vertex> vertexSet;
-    std::set<Arc> arcSet;
+    std::set<Vertex> vertex_set_;
+    std::set<Arc> arc_set_;
 
-    void addVertex(const Vertex& vertex) { vertexSet.insert(vertex); }
-    void addArc(const Arc& arc) { arcSet.insert(arc); }
+    void addVertex(const Vertex& vertex) { vertex_set_.insert(vertex); }
+    void addArc(const Arc& arc) { arc_set_.insert(arc); }
     [[nodiscard]] std::set<Arc> getArcsStartFrom(const Vertex& from) const {
-        std::set<Arc> resultArcSet;
-        for (const auto& arc : arcSet) {
-            if (*arc.tail == from) {
-                resultArcSet.insert(arc);
+        std::set<Arc> result_arc_result;
+        for (const auto& arc : arc_set_) {
+            if (*arc.tail_ == from) {
+                result_arc_result.insert(arc);
             }
         }
 
-        return resultArcSet;
+        return result_arc_result;
     }
 };
 
 struct DirectedPath {
-    std::vector<Arc> arcVector;
+    std::vector<Arc> arc_vector_;
 };
 
 #endif
