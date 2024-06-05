@@ -1,21 +1,21 @@
 #ifndef REGISTERFILE_HPP
 #define REGISTERFILE_HPP
 
-#include <vector>
 #include "Register.hpp"
+#include <vector>
 
 /**
  * @class RegisterFile
  * @brief A class representing a register file containing multiple registers.
  */
+template <size_t S>
 class RegisterFile final {
  public:
     /**
      * @brief Constructs a RegisterFile object with the specified number of registers.
      * @param size The number of registers in the register file.
-     * @param word_size The size of a word.
      */
-    explicit RegisterFile(const size_t& size, const size_t& word_size);
+    explicit RegisterFile(const size_t& size);
 
     /**
      * @brief Gets a reference to the register at the specified index.
@@ -23,23 +23,27 @@ class RegisterFile final {
      * @return A reference to the register at the specified index.
      * @throws std::out_of_range if the index is out of bounds.
      */
-    [[nodiscard]] Register& get(const size_t& index);
+    [[nodiscard]] Register<S>& get(const size_t& index);
 
  private:
     /**
      * @brief Vector containing the registers in the register file.
      */
-    std::vector<Register> registers_;
+    std::vector<Register<S>> registers_;
 
     /**
      * @brief The number of registers in the register file.
      */
     size_t size_;
-
-    /**
-     * @brief The size of a word.
-     */
-    size_t word_size_;
 };
 
-#endif  // REGISTERFILE_HPP
+template <size_t S>
+RegisterFile<S>::RegisterFile(const size_t& size) : registers_(size, Register<S>()), size_(size) {}
+
+template <size_t S>
+Register<S>& RegisterFile<S>::get(const size_t& index) {
+    return registers_.at(index);
+}
+
+
+#endif

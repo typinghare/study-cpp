@@ -1,51 +1,71 @@
 #ifndef WORD_HPP
 #define WORD_HPP
 
-#include <vector>
+#include <array>
+#include <sstream>
 #include "Virtual.hpp"
 
 /**
  * @class Word
- * @brief A class representing a word of memory with specific endianness.
+ * @brief A class representing a word of memory with a specific size.
+ * @tparam S The size of the word in bytes.
  */
+template <size_t S>
 class Word final {
  public:
-    /**
-     * @brief Constructs a Word object with the specified size and endianness type.
-     * @param size The size of the word in bytes.
-     */
-    explicit Word(const size_t& size);
+    Word();
+
+    explicit Word(const std::array<byte, S>& bytes);
 
     /**
      * @brief Sets the bytes of the word.
-     * @param bytes Pointer to the bytes to be set.
+     * @param bytes An array containing the bytes to be set.
      */
-    void setBytes(const byte* bytes);
+    void setBytes(const std::array<byte, S>& bytes);
 
     /**
      * @brief Gets the bytes of the word.
-     * @return A vector containing the bytes of the word.
+     * @return An array containing the bytes of the word.
      */
-    [[nodiscard]] std::vector<byte> getBytes() const;
+    [[nodiscard]] std::array<byte, S> getBytes() const;
 
-    /**
-     * @brief Gets the size of the word.
-     * @return the size of the word.
-     */
-    [[nodiscard]] size_t size() const;
-
-    [[nodiscard]] std::string toHex() const;
+    [[nodiscard]] std::string toHexString() const;
 
  private:
     /**
-     * @brief The size of the word in bytes.
+     * @brief Storage for the word's bytes.
      */
-    size_t size_;
-
-    /**
-     * @brief Container for the word's bytes.
-     */
-    std::vector<byte> data_;
+    std::array<byte, S> bytes_{};
 };
 
-#endif
+template <size_t S>
+Word<S>::Word() = default;
+
+template <size_t S>
+Word<S>::Word(const std::array<byte, S>& bytes) {
+    setBytes(bytes);
+}
+
+template <size_t S>
+void Word<S>::setBytes(const std::array<byte, S>& bytes) {
+    bytes_ = bytes;
+}
+
+template <size_t S>
+std::array<byte, S> Word<S>::getBytes() const {
+    return bytes_;
+}
+
+template <size_t S>
+std::string Word<S>::toHexString() const {
+    std::stringstream ss;
+    ss << "0x";
+
+    for (const auto _byte : bytes_) {
+        ss << to_hex_string(_byte);
+    }
+
+    return ss.str();
+}
+
+#endif  // WORD_HPP

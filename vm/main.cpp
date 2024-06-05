@@ -1,11 +1,13 @@
+
 #include <iostream>
-#include "kernel/Memory.hpp"
-#include "tr/TuringComplete.hpp"
+#include "mt/MinimalTuringComplete.hpp"
 
 int main() {
-    const auto jump = Tr::Micro::JUMP(Tr::word(0, 42));
-    Tr::execute(jump);
-    std::cout << Tr::reg(Tr::R_PC).toHex() << std::endl;
+    MT::memory.write(2, 0xAB);
+    MT::memory.write(3, 0xCD);
+    MT::execute(MT::Instr::JUMP, 0);
+
+    std::cout << MT::cpu.readRegister(MT::R_PC).toHexString() << std::endl;
 
     return 0;
 }

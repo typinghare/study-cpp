@@ -1,7 +1,6 @@
 #ifndef MEMORY_HPP
 #define MEMORY_HPP
 
-#include <exception>
 #include <string>
 #include "Virtual.hpp"
 
@@ -90,5 +89,37 @@ class Memory final {
      */
     size_t size_{};
 };
+
+inline Memory::Memory(const size_t& size) : size_(size) { data_ = new byte[size]; }
+
+inline Memory::~Memory() {
+    delete[] data_;
+}
+
+inline byte Memory::read(const address_t& address) const {
+    if (address >= size_) {
+        throw InvalidAddress(address, size_);
+    }
+
+    return data_[address];
+}
+
+inline void Memory::write(const address_t& address, const byte& value) const {
+    if (address >= size_) {
+        throw InvalidAddress(address, size_);
+    }
+
+    data_[address] = value;
+}
+
+inline size_t Memory::size() const { return size_; }
+
+inline Memory::InvalidAddress::InvalidAddress(const address_t& address, const size_t& size) :
+    address_(address), size_(size) {
+    message = "Address is out of range: " + std::to_string(address_) +
+              ". The size of the memory block is: " + std::to_string(size_) + ".";
+}
+
+inline const char* Memory::InvalidAddress::what() const noexcept { return message.c_str(); }
 
 #endif
